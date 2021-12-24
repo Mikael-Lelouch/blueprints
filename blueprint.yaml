@@ -1,0 +1,117 @@
+name: tito
+version: v1
+formatVersion: 1
+inputs:
+  cloud:
+    type: string
+    enum:
+      - azure
+      - aws
+      - vsphere
+      - alibaba
+      - vmconaws
+  cloud2:
+    type: string
+    default: vmconaws
+    oneOf:
+      - title: VMC on Aws Deploiement
+        const: vmconaws
+      - title: Vsphere deployement
+        const: vsphere
+  code:
+    type: string
+    enum:
+      - V2
+      - V1.9.6
+      - 1.8.5
+      - V1.5
+      - V0.5
+    default: V2
+  title:
+    type: string
+resources:
+  front_end:
+    type: Cloud.Machine
+    count: '${FrontEndNumber}'
+    properties:
+      image: Centos8-mle
+      #imageRef: CL_S3_1/centos-web
+      flavor: small-mle
+      customizationSpec: Linux
+      remoteAccess:
+        authentication: publicPrivateKey
+        sshKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDqouM8zztD2sCBPdkVScclp/42Md9lNcqFZsJ3g5dEMFqF8cTggVmvl1qntow5mi618XPNeRO880vtHXkXyhGYBdm57VMUHzq3Y8/Lroe5qochJGMXTQJCMpX0s/+dQEhxSled0i/t+MMbdx7PlB6T42fVe5ooOtXv0Vu7j9U9an3A9KfXnJ/5A/ezesB0U5uJaePEM7jR3TbcX5RmsFPJrHWQC5hJR3NgQqSqJ4cSFkl1PG0zKwYnKthM3SUio00fg8n6Ir08ukwM2PwlPjCW4jNAwKbLfzm7mMQdPPM7l6eZJ/taPXfDcXSU8zx6nu3f7WttWQSa7wI06qLAGKJHFqBRxQ26+fe2xurGfYIaxIifQ501OokBh2pVBca9P03J1UXZjY9oMEzDtJKrIWnIO4hPlMqv7+Qf6t2hmiLa5jrTZEhEvRmQ/RmFUYiFK9cTm7dHvKWv5ZRA2BgIwEjTqviaf6vQaMXN5nb3ePyHZXRfvFjfzltW4l/C9a/YRGn/8nzx8GrdyDWCGdf6oRFLaO6PHV6EdBUoIjy7E+pQsGfDO3B3yjHTfEXuVtcoqiDY8bMsGDvjlrk5R+vyexumJxBXJam431IF5+IR1/ru0qBPnMGAc681MRwPMq2jdWeFZ4u2YSnj/HVv38iiVjtU6dRL6dhWmkS0jrrnOu+0zw== lelouchm@vmware.com
+      networks:
+        - network: '${resource.Cloud_vSphere_Network_2.id}'
+      saltConfiguration: null
+      cloudConfig: |
+        #cloud-config
+        packages:
+          - git
+        runcmd:
+          - cd /tmp
+          - git clone https://github.com/vmeoc/Tito
+          - cd Tito/asset/Deployment/CloudAssembly/titodb
+          - chmod u+x *.sh
+          - [ /tmp/Tito/asset/Deployment/CloudAssembly/titodb/tito_as.sh, ${resource.DB.networks[0].address} ]
+          - cd /var/www/html/
+          - sed -i -e 's|<h1>Tito</h1>|<h1>Tito ${input.title}</h1>|g' index.php
+          - sed -i -e 's|<h3>Time Traffic Overview</h3>|<h3>Time Traffic Overview ${input.title}</h3>|g' index.php
+          - sed -i -e 's|<h5>by Vince :)</h5>|<h5>by Mika :)</h5>|g' index.php
+  Cloud_vSphere_Network_2:
+    type: Cloud.vSphere.Network
+    properties:
+      networkType: existing
+      constraints:
+        - tag: '${input.cloud2}'
+  DB:
+    type: Cloud.Machine
+    properties:
+      image: Centos8-mle
+      #imageRef: CL_S3_1/centos-web
+      flavor: small-mle
+      customizationSpec: Linux
+      networks:
+        - network: '${resource.Cloud_Network_1.id}'
+      remoteAccess:
+        authentication: publicPrivateKey
+        sshKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDqouM8zztD2sCBPdkVScclp/42Md9lNcqFZsJ3g5dEMFqF8cTggVmvl1qntow5mi618XPNeRO880vtHXkXyhGYBdm57VMUHzq3Y8/Lroe5qochJGMXTQJCMpX0s/+dQEhxSled0i/t+MMbdx7PlB6T42fVe5ooOtXv0Vu7j9U9an3A9KfXnJ/5A/ezesB0U5uJaePEM7jR3TbcX5RmsFPJrHWQC5hJR3NgQqSqJ4cSFkl1PG0zKwYnKthM3SUio00fg8n6Ir08ukwM2PwlPjCW4jNAwKbLfzm7mMQdPPM7l6eZJ/taPXfDcXSU8zx6nu3f7WttWQSa7wI06qLAGKJHFqBRxQ26+fe2xurGfYIaxIifQ501OokBh2pVBca9P03J1UXZjY9oMEzDtJKrIWnIO4hPlMqv7+Qf6t2hmiLa5jrTZEhEvRmQ/RmFUYiFK9cTm7dHvKWv5ZRA2BgIwEjTqviaf6vQaMXN5nb3ePyHZXRfvFjfzltW4l/C9a/YRGn/8nzx8GrdyDWCGdf6oRFLaO6PHV6EdBUoIjy7E+pQsGfDO3B3yjHTfEXuVtcoqiDY8bMsGDvjlrk5R+vyexumJxBXJam431IF5+IR1/ru0qBPnMGAc681MRwPMq2jdWeFZ4u2YSnj/HVv38iiVjtU6dRL6dhWmkS0jrrnOu+0zw== lelouchm@vmware.com
+      cloudConfig: |
+        packages:
+          - mysql
+          - mariadb-server
+          - mariadb
+        runcmd:
+          - exec &> /tmp/tito_db.log
+          - sudo systemctl enable mariadb.service
+          - sudo systemctl start mariadb.service
+          - mysql -v -u root << EOF
+          - USE mysql;
+          - SELECT user,host FROM user;
+          - GRANT ALL PRIVILEGES ON *.* TO root@'%' WITH GRANT OPTION;
+          - EOF
+        #to update the root password
+          - sudo systemctl stop mariadb.service
+          - sudo mysqld_safe --skip-grant-tables &
+          - sleep 5
+          - mysql -v -u root << EOF
+          - UPDATE mysql.user SET Password=PASSWORD('Tito2016') WHERE User='root';
+          - FLUSH PRIVILEGES;
+          - EOF
+          - sudo mysqladmin -u root -pTito2016 shutdown
+          - sudo systemctl start mariadb.service
+          
+          #create conf DB and table
+          - mysql -v -u root -pTito2020 << EOF
+          - create database if not exists TitoDB;
+          - use TitoDB;
+          - CREATE TABLE TitoTable (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, home VARCHAR(50) NOT NULL, work VARCHAR(50) NOT NULL, hour_home_departure VARCHAR(50) NOT NULL, hour_work_departure VARCHAR(50) NOT NULL)
+          - EOF
+          
+  Cloud_Network_1:
+    type: Cloud.Network
+    properties:
+      networkType: existing
+      constraints:
+        - tag: '${input.cloud2}'
+
