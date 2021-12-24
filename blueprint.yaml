@@ -10,6 +10,7 @@ inputs:
       - vsphere
       - alibaba
       - vmconaws
+      - google
   cloud2:
     type: string
     default: vmconaws
