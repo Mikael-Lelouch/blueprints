@@ -41,7 +41,7 @@ resources:
       customizationSpec: Linux
       remoteAccess:
         authentication: publicPrivateKey
-        sshKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDqouM8zztD2sCBPdkVScclp/42Md9lNcqFZsJ3g5dEMFqF8cTggVmvl1qntow5mi618XPNeRO880vtHXkXyhGYBdm57VMUHzq3Y8/Lroe5qochJGMXTQJCMpX0s/+dQEhxSled0i/t+MMbdx7PlB6T42fVe5ooOtXv0Vu7j9U9an3A9KfXnJ/5A/ezesB0U5uJaePEM7jR3TbcX5RmsFPJrHWQC5hJR3NgQqSqJ4cSFkl1PG0zKwYnKthM3SUio00fg8n6Ir08ukwM2PwlPjCW4jNAwKbLfzm7mMQdPPM7l6eZJ/taPXfDcXSU8zx6nu3f7WttWQSa7wI06qLAGKJHFqBRxQ26+fe2xurGfYIaxIifQ501OokBh2pVBca9P03J1UXZjY9oMEzDtJKrIWnIO4hPlMqv7+Qf6t2hmiLa5jrTZEhEvRmQ/RmFUYiFK9cTm7dHvKWv5ZRA2BgIwEjTqviaf6vQaMXN5nb3ePyHZXRfvFjfzltW4l/C9a/YRGn/8nzx8GrdyDWCGdf6oRFLaO6PHV6EdBUoIjy7E+pQsGfDO3B3yjHTfEXuVtcoqiDY8bMsGDvjlrk5R+vyexumJxBXJam431IF5+IR1/ru0qBPnMGAc681MRwPMq2jdWeFZ4u2YSnj/HVv38iiVjtU6dRL6dhWmkS0jrrnOu+0zw== lelouchm@vmware.com
+        sshKey:
       networks:
         - network: '${resource.Cloud_vSphere_Network_2.id}'
       saltConfiguration: null
@@ -80,7 +80,7 @@ resources:
         - network: '${resource.Cloud_Network_1.id}'
       remoteAccess:
         authentication: publicPrivateKey
-        sshKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDqouM8zztD2sCBPdkVScclp/42Md9lNcqFZsJ3g5dEMFqF8cTggVmvl1qntow5mi618XPNeRO880vtHXkXyhGYBdm57VMUHzq3Y8/Lroe5qochJGMXTQJCMpX0s/+dQEhxSled0i/t+MMbdx7PlB6T42fVe5ooOtXv0Vu7j9U9an3A9KfXnJ/5A/ezesB0U5uJaePEM7jR3TbcX5RmsFPJrHWQC5hJR3NgQqSqJ4cSFkl1PG0zKwYnKthM3SUio00fg8n6Ir08ukwM2PwlPjCW4jNAwKbLfzm7mMQdPPM7l6eZJ/taPXfDcXSU8zx6nu3f7WttWQSa7wI06qLAGKJHFqBRxQ26+fe2xurGfYIaxIifQ501OokBh2pVBca9P03J1UXZjY9oMEzDtJKrIWnIO4hPlMqv7+Qf6t2hmiLa5jrTZEhEvRmQ/RmFUYiFK9cTm7dHvKWv5ZRA2BgIwEjTqviaf6vQaMXN5nb3ePyHZXRfvFjfzltW4l/C9a/YRGn/8nzx8GrdyDWCGdf6oRFLaO6PHV6EdBUoIjy7E+pQsGfDO3B3yjHTfEXuVtcoqiDY8bMsGDvjlrk5R+vyexumJxBXJam431IF5+IR1/ru0qBPnMGAc681MRwPMq2jdWeFZ4u2YSnj/HVv38iiVjtU6dRL6dhWmkS0jrrnOu+0zw== lelouchm@vmware.com
+        sshKey: 
       cloudConfig: |
         packages:
           - mysql
