@@ -50,6 +50,7 @@ resources:
         packages:
           - git
         runcmd:
+          - touch /etc/cloud/cloud-init.disabled
           - cd /tmp
           - git clone https://github.com/vmeoc/Tito
           - cd Tito/asset/Deployment/CloudAssembly/titodb
@@ -59,6 +60,9 @@ resources:
           - sed -i -e 's|<h1>Tito</h1>|<h1>Tito ${input.title}</h1>|g' index.php
           - sed -i -e 's|<h3>Time Traffic Overview</h3>|<h3>Time Traffic Overview ${input.title}</h3>|g' index.php
           - sed -i -e 's|<h5>by Vince :)</h5>|<h5>by Mika :)</h5>|g' index.php
+        users: 
+          - name: root
+            lock-passwd: false
   Cloud_vSphere_Network_2:
     type: Cloud.vSphere.Network
     properties:
@@ -83,6 +87,7 @@ resources:
           - mariadb-server
           - mariadb
         runcmd:
+          - touch /etc/cloud/cloud-init.disabled
           - exec &> /tmp/tito_db.log
           - sudo systemctl enable mariadb.service
           - sudo systemctl start mariadb.service
@@ -108,7 +113,9 @@ resources:
           - use TitoDB;
           - CREATE TABLE TitoTable (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, home VARCHAR(50) NOT NULL, work VARCHAR(50) NOT NULL, hour_home_departure VARCHAR(50) NOT NULL, hour_work_departure VARCHAR(50) NOT NULL)
           - EOF
-          
+        users: 
+          - name: root
+            lock-passwd: false
   Cloud_Network_1:
     type: Cloud.Network
     properties:
