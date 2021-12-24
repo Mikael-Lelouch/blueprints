@@ -35,7 +35,7 @@ resources:
     type: Cloud.Machine
     count: '${FrontEndNumber}'
     properties:
-      image: Centos8-mle
+      image: Centos7-mle
       #imageRef: CL_S3_1/centos-web
       flavor: small-mle
       customizationSpec: Linux
@@ -72,7 +72,7 @@ resources:
   DB:
     type: Cloud.Machine
     properties:
-      image: Centos8-mle
+      image: Centos7-mle
       #imageRef: CL_S3_1/centos-web
       flavor: small-mle
       customizationSpec: Linux
